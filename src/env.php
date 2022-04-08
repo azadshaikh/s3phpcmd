@@ -9,12 +9,7 @@ use Symfony\Component\Dotenv\Dotenv;
 
 $dotenv = new Dotenv();
 
-$dotenv->load(CORE_PATH . '/../.env');
-
-// You can also load several files
-$dotenv->load(CORE_PATH . '/../.env');
-
-$dotenv->loadEnv(CORE_PATH . '/../.env');
+$dotenv->load(ROOT_PATH . '/.env');
 
 if (!function_exists('env')) {
     /**

@@ -1,20 +1,24 @@
 #!/usr/bin/env php
 <?php
-
-require __DIR__.'/vendor/autoload.php';
-
 define('ROOT_PATH', __DIR__);
+
+require_once __DIR__.'/vendor/autoload.php';
+require ROOT_PATH . '/src/env.php';
+require ROOT_PATH . '/src/flysystem.php';
 
 use Azadshaikh\S3phpCmd\Commands\Demo;
 use Azadshaikh\S3phpCmd\Commands\Play;
 use Azadshaikh\S3phpCmd\Commands\Listfiles;
 use Azadshaikh\S3phpCmd\Commands\VisibilityPublic;
+use Azadshaikh\S3phpCmd\Commands\LocalBackup;
 use Symfony\Component\Console\Application;
+
 
 $application = new Application();
 
 // ... register commands
 $application->add(new Listfiles());
 $application->add(new VisibilityPublic());
-$application->add(new Demo());
+$application->add(new LocalBackup());
+// $application->add(new Demo());
 $application->run();
