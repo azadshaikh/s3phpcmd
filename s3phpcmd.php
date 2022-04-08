@@ -8,11 +8,13 @@ define('ROOT_PATH', __DIR__);
 use Azadshaikh\S3phpCmd\Commands\Demo;
 use Azadshaikh\S3phpCmd\Commands\Play;
 use Azadshaikh\S3phpCmd\Commands\Listfiles;
+use Azadshaikh\S3phpCmd\Commands\VisibilityPublic;
 use Symfony\Component\Console\Application;
 
 $application = new Application();
 
 // ... register commands
 $application->add(new Listfiles());
+$application->add(new VisibilityPublic());
 $application->add(new Demo());
 $application->run();

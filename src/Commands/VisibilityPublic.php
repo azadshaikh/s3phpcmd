@@ -16,21 +16,21 @@ use \League\Flysystem\FileAttributes;
 use \League\Flysystem\DirectoryAttributes;
 
 
-class Listfiles extends Command
+class VisibilityPublic extends Command
 {
     /**
      * The name of the command.
      *
      * @var string
      */
-    protected static $defaultName = 'listfiles';
+    protected static $defaultName = 'visibilitypublic';
 
     /**
      * The command description shown when running "php bin/demo list".
      *
      * @var string
      */
-    protected static $defaultDescription = 'It Will List all Files in S3';
+    protected static $defaultDescription = 'It Will Set Visibility of all Files in S3 to PUBLIC';
 
     /**
      * Execute the command
@@ -42,7 +42,7 @@ class Listfiles extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output); //https://symfony.com/doc/current/console/style.html
-        $io->title('Listing all Objects in S3 Bucket');
+        $io->title('Setting Visibility to PUBLIC for all Objects in S3 Bucket');
 
         $options = [
             'version' => 'latest',
@@ -84,18 +84,42 @@ class Listfiles extends Command
                 if ($item instanceof FileAttributes) {
                     // Code for Files
                     $path = $item->path();
-                    $io->text('File: ' . $path);
+
+
+                    /* //Check Visibility
+                    try {
+                        $visibility = $filesystem->visibility($path);
+                        $io->text($visibility);
+                    } catch (FilesystemException | UnableToRetrieveMetadata $exception) {
+                        $io->error($exception->getMessage());
+                    }
+                    */
+
                     //Set Visibility To Public
+                    try {
+
+                        if ($filesystem->visibility($path) === 'private') {
+                            $filesystem->setVisibility($path, 'public');
+                            $io->info($path . '=> Done');
+                        } else {
+                            $io->text($path . '=> Already Public');
+                        }
+
+                        // $io->info('File Visibility Set to Public');
+                    } catch (FilesystemException | UnableToSetVisibility $exception) {
+                        $io->error($exception->getMessage());
+                    }
                 } elseif ($item instanceof DirectoryAttributes) {
                     // Code for Folder
-                    $io->text('Folder: ' . $path);
+                    // $path = $item->path();
+                    // $io->text($path);
                 }
             }
         } catch (FilesystemException $exception) {
             $io->error($exception->getMessage());
         }
 
-        $io->success('Successfully listed all objects in S3 Bucket');
+        $io->success('Successfully Set Visibility to PUBLIC for all Objects in S3 Bucket');
         return Command::SUCCESS;
     }
 }

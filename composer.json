@@ -31,6 +31,7 @@
   "require": {
     "php": ">=7.2",
     "league/flysystem-aws-s3-v3": "^3.0",
+    "symfony/dotenv": "^5.0",
     "symfony/console": "6.1.x-dev"
   },
   "config": {
@@ -44,7 +45,7 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Noise\\Tests\\": "tests/"
+      "Azadshaikh\\S3phpCmd\\": "tests/"
     }
   },
   "minimum-stability": "stable",
