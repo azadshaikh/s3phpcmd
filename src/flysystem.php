@@ -54,3 +54,35 @@ function sourceS3Connect () {
     // The FilesystemOperator
     return $filesystem = new Filesystem($adapter);
     }
+
+    
+function destinationS3Connect () {
+    $options = [
+        'version' => env('DESTINATION_S3_VERSION'),
+        'region'  => env('DESTINATION_S3_DEFAULT_REGION'),
+        'endpoint' => env('DESTINATION_S3_ENDPOINT'),
+        'use_path_style_endpoint' => (bool)env('DESTINATION_S3_USE_PATH_STYLE_ENDPOINT'),
+        'credentials' => [
+            'key'    => env('DESTINATION_S3_ACCESS_KEY_ID'),
+            'secret' => env('DESTINATION_S3_SECRET_ACCESS_KEY'),
+        ]
+    ];
+    // var_dump($options); die();
+    $client = new S3Client($options);
+    // The internal adapter
+    $adapter = new AwsS3V3Adapter(
+        // S3Client
+        $client,
+        // Bucket name
+        env('DESTINATION_S3_BUCKET'),
+        // Optional path prefix
+        '',
+        // Visibility converter (League\Flysystem\AwsS3V3\VisibilityConverter)
+        new PortableVisibilityConverter(
+            // Optional default for directories
+            Visibility::PUBLIC // or ::PRIVATE
+        )
+    );
+    // The FilesystemOperator
+    return $filesystem = new Filesystem($adapter);
+    }

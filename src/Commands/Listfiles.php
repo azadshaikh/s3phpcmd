@@ -39,7 +39,7 @@ class Listfiles extends Command
         $io->title('Listing all Objects in S3 Bucket');
 
         try {
-            $filesystem = sourceS3Connect();
+            $filesystem = destinationS3Connect();
             $listing = $filesystem->listContents('/', true);
             foreach ($listing as $item) {
                 if ($item instanceof FileAttributes) {
