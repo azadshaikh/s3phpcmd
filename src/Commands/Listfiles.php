@@ -3,9 +3,11 @@
 namespace Azadshaikh\S3phpCmd\Commands;
 
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+
 use \League\Flysystem\FileAttributes;
 use \League\Flysystem\DirectoryAttributes;
 
@@ -26,6 +28,14 @@ class Listfiles extends Command
      */
     protected static $defaultDescription = 'It Will List all Files in S3';
 
+    protected function configure(): void
+    {
+        $this
+            // ...
+            ->addArgument('bucket', InputArgument::OPTIONAL, 'Choose which bucket to list files from.')
+        ;
+    }
+
     /**
      * Execute the command
      *
@@ -37,9 +47,15 @@ class Listfiles extends Command
     {
         $io = new SymfonyStyle($input, $output); //https://symfony.com/doc/current/console/style.html
         $io->title('Listing all Objects in S3 Bucket');
+        $S3Source = $input->getArgument('bucket');
+        // $io->text($S3Source); die();
 
         try {
-            $filesystem = destinationS3Connect();
+            if ($S3Source == "destination") {
+                $filesystem = destinationS3Connect();
+            } else {
+                $filesystem = sourceS3Connect();
+            }
             $listing = $filesystem->listContents('/', true);
             foreach ($listing as $item) {
                 if ($item instanceof FileAttributes) {
@@ -55,7 +71,6 @@ class Listfiles extends Command
         } catch (FilesystemException $exception) {
             $io->error($exception->getMessage());
         }
-
         $io->success('Successfully listed all objects in S3 Bucket');
         return Command::SUCCESS;
     }
