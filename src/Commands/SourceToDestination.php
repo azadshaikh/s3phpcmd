@@ -13,29 +13,21 @@ use \League\Flysystem\FileAttributes;
 use \League\Flysystem\DirectoryAttributes;
 
 
-class LocalBackup extends Command
+class SourceToDestination extends Command
 {
     /**
      * The name of the command.
      *
      * @var string
      */
-    protected static $defaultName = 'localbackup';
+    protected static $defaultName = 'sourcetodestination';
 
     /**
      * The command description shown when running "php bin/demo list".
      *
      * @var string
      */
-    protected static $defaultDescription = 'It Backup All Files in backup Folder in Root Directory';
-
-    protected function configure(): void
-    {
-        $this
-            // ...
-            ->addArgument('bucket', InputArgument::OPTIONAL, 'Choose which bucket to download files from.')
-        ;
-    }
+    protected static $defaultDescription = 'Move all Files from Source to Destination S3 Bucket';
 
     /**
      * Execute the command
@@ -47,17 +39,12 @@ class LocalBackup extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output); //https://symfony.com/doc/current/console/style.html
-        $io->title('Backup All Files From Source S3 Bucket to Backup Folder in Root Directory');
-        $S3Source = $input->getArgument('bucket');
+        $io->title('Move all Files from Source to Destination S3 Bucket');
 
         try {
-            if ($S3Source == "destination") {
-                $filesystem = destinationS3Connect();
-            } else {
-                $filesystem = sourceS3Connect();
-            }
-            $localfilesystem = localFileConnect('backup');
-            $listing = $filesystem->listContents('/', true);
+            $sourceFilesystem = sourceS3Connect();
+            $destinationFilesystem = destinationS3Connect();
+            $listing = $sourceFilesystem->listContents('/', true);
             foreach ($listing as $item) {
                 if ($item instanceof FileAttributes) {
                     // Code for Files
@@ -65,14 +52,14 @@ class LocalBackup extends Command
                     
                     try {
                         #Get Files from S3
-                        $response = $filesystem->read($path);
+                        $response = $sourceFilesystem->read($path);
                     } catch (FilesystemException | UnableToReadFile $exception) {
                         $io->error($exception->getMessage());
                     }
 
                     try {
-                        $localfilesystem->write($path, $response);
-                        $io->info($path . '=> Downloaded');
+                        $destinationFilesystem->write($path, $response);
+                        $io->info($path . '=> Moved Successfully');
                     } catch (FilesystemException | UnableToWriteFile $exception) {
                         $io->error($exception->getMessage());
                     }

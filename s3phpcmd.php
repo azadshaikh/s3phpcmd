@@ -1,4 +1,5 @@
 #!/usr/bin/env php
+
 <?php
 define('ROOT_PATH', __DIR__);
 
@@ -11,6 +12,7 @@ use Azadshaikh\S3phpCmd\Commands\Play;
 use Azadshaikh\S3phpCmd\Commands\Listfiles;
 use Azadshaikh\S3phpCmd\Commands\VisibilityPublic;
 use Azadshaikh\S3phpCmd\Commands\LocalBackup;
+use Azadshaikh\S3phpCmd\Commands\SourceToDestination;
 use Symfony\Component\Console\Application;
 
 
@@ -20,5 +22,6 @@ $application = new Application();
 $application->add(new Listfiles());
 $application->add(new VisibilityPublic());
 $application->add(new LocalBackup());
+$application->add(new SourceToDestination());
 // $application->add(new Demo());
 $application->run();

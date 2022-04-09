@@ -3,9 +3,11 @@
 namespace Azadshaikh\S3phpCmd\Commands;
 
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+
 use League\Flysystem\Visibility;
 use \League\Flysystem\FileAttributes;
 use \League\Flysystem\DirectoryAttributes;
@@ -27,6 +29,14 @@ class VisibilityPublic extends Command
      */
     protected static $defaultDescription = 'It Will Set Visibility of all Files in S3 to PUBLIC';
 
+    protected function configure(): void
+    {
+        $this
+            // ...
+            ->addArgument('bucket', InputArgument::OPTIONAL, 'Choose bucket to perform action on.')
+        ;
+    }
+
     /**
      * Execute the command
      *
@@ -38,9 +48,14 @@ class VisibilityPublic extends Command
     {
         $io = new SymfonyStyle($input, $output); //https://symfony.com/doc/current/console/style.html
         $io->title('Setting Visibility to PUBLIC for all Objects in S3 Bucket');
+        $S3Source = $input->getArgument('bucket');
 
         try {
-            $filesystem = sourceS3Connect();
+            if ($S3Source == "destination") {
+                $filesystem = destinationS3Connect();
+            } else {
+                $filesystem = sourceS3Connect();
+            }
             $listing = $filesystem->listContents('/', true);
             foreach ($listing as $item) {
                 if ($item instanceof FileAttributes) {
