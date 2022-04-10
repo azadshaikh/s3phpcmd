@@ -1,22 +1,26 @@
 {
-  "name": "medunes/noise-php",
-  "description": "A quick skeleton project starter with frequently needed boiler-plate setups (ci, badges, etc.)",
+  "name": "azadshaikh/s3phpcmd",
+  "description": "PHP CLI tools to manage S3. S3 to S3 Migrations and Backup",
   "keywords": [
-    "skeleton",
-    "starter"
+    "php",
+    "S3",
+    "CLI",
+    "cmd",
+    "migrations",
+    "backups"
   ],
-  "homepage": "http://github.com/medunes/noise-php",
+  "homepage": "https://github.com/azadshaikh/s3phpcmd",
   "type": "project",
   "license": "MIT",
   "authors": [
     {
-      "name": "medunes",
-      "email": "contact@medunes.net",
-      "homepage": "http://medunes.net"
+      "name": "Azad Shaikh",
+      "email": "mohd.azad.shaikh@gmail.com",
+      "homepage": "https://github.com/azadshaikh"
     }
   ],
   "require": {
-    "php": ">=7.2",
+    "php": ">=7.4",
     "league/flysystem": "^3.0",
     "league/flysystem-aws-s3-v3": "^3.0",
     "symfony/console": "6.1.x-dev",
@@ -31,31 +35,5 @@
       "Azadshaikh\\S3phpCmd\\": "src/"
     }
   },
-  "autoload-dev": {
-    "psr-4": {
-      "Azadshaikh\\S3phpCmd\\": "tests/"
-    }
-  },
-  "minimum-stability": "stable",
-  "require-dev": {
-    "pdepend/pdepend": "^2.8",
-    "phpstan/phpstan": "^0.12.58",
-    "squizlabs/php_codesniffer": "^3.5",
-    "vimeo/psalm": "^4.2"
-  },
-  "scripts": {
-    "setup:clean": "rm -f composer.lock && rm -rf vendor/ && composer clearcache && composer update --no-interaction --prefer-dist --no-suggest --no-progress",
-    "phpcs:scan": "php vendor/bin/phpcs --colors -ps --report=summary",
-    "phpcs:fix": "php vendor/bin/phpcbf",
-    "build:phpunit": "php vendor/bin/phpunit -c phpunit.xml --coverage-clover coverage.xml",
-    "build:phpstan": [
-      "phpstan analyze src --level=5 --configuration=phpstan.neon"
-    ],
-    "build:psalm": "vendor/bin/psalm",
-    "build": [
-      "@build:phpunit",
-      "@build:phpstan",
-      "@build:psalm"
-    ]
-  }
+  "minimum-stability": "stable"
 }
