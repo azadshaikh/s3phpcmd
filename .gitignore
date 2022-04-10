@@ -1,7 +1,3 @@
 vendor/
 backup/
-coverage/
-.phpunit.result.cache
-.phpunit.cache
-reports/
-coverage.xml
+composer.lock
