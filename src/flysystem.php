@@ -35,7 +35,6 @@ function sourceS3Connect () {
             'secret' => env('SOURCE_S3_SECRET_ACCESS_KEY'),
         ]
     ];
-    // var_dump($options); die();
     $client = new S3Client($options);
     // The internal adapter
     $adapter = new AwsS3V3Adapter(
@@ -67,7 +66,6 @@ function destinationS3Connect () {
             'secret' => env('DESTINATION_S3_SECRET_ACCESS_KEY'),
         ]
     ];
-    // var_dump($options); die();
     $client = new S3Client($options);
     // The internal adapter
     $adapter = new AwsS3V3Adapter(
