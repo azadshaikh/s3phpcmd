@@ -58,7 +58,7 @@ class Listfiles extends Command
                 $filesystem = sourceS3Connect();
             }
             $listing = $filesystem->listContents('/', true);
-            print_r($listing); die();
+            // print_r($listing); die();
             foreach ($listing as $item) {
                 if ($item instanceof FileAttributes) {
                     // var_dump($item); die();
