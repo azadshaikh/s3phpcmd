@@ -11,6 +11,8 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use League\Flysystem\Visibility;
 use \League\Flysystem\FileAttributes;
 use \League\Flysystem\DirectoryAttributes;
+use League\Flysystem\FilesystemException;
+use League\Flysystem\UnableToSetVisibility;
 
 
 class VisibilityPublic extends Command

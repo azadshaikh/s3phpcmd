@@ -10,6 +10,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 use \League\Flysystem\FileAttributes;
 use \League\Flysystem\DirectoryAttributes;
+use League\Flysystem\FilesystemException;
 
 
 class Listfiles extends Command

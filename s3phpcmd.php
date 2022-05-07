@@ -7,8 +7,8 @@ require_once ROOT_PATH . '/vendor/autoload.php';
 require ROOT_PATH . '/src/env.php';
 require ROOT_PATH . '/src/flysystem.php';
 
-use Azadshaikh\S3phpCmd\Commands\Demo;
-use Azadshaikh\S3phpCmd\Commands\Play;
+// use Azadshaikh\S3phpCmd\Commands\Demo;
+// use Azadshaikh\S3phpCmd\Commands\Play;
 use Azadshaikh\S3phpCmd\Commands\Listfiles;
 use Azadshaikh\S3phpCmd\Commands\VisibilityPublic;
 use Azadshaikh\S3phpCmd\Commands\LocalBackup;
