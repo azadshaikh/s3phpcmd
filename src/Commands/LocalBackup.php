@@ -9,8 +9,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 use League\Flysystem\Visibility;
-use \League\Flysystem\FileAttributes;
-use \League\Flysystem\DirectoryAttributes;
+use League\Flysystem\FileAttributes;
+use League\Flysystem\DirectoryAttributes;
 use League\Flysystem\FilesystemException;
 use League\Flysystem\UnableToWriteFile;
 use League\Flysystem\UnableToReadFile;

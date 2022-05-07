@@ -15,22 +15,28 @@ use League\Flysystem\FilesystemException;
 use League\Flysystem\UnableToReadFile;
 use League\Flysystem\UnableToWriteFile;
 
-
-class SourceToDestination extends Command
+class LocalToS3 extends Command
 {
     /**
      * The name of the command.
      *
      * @var string
      */
-    protected static $defaultName = 'sourcetodestination';
+    protected static $defaultName = 'localtos3';
 
     /**
      * The command description shown when running "php bin/demo list".
      *
      * @var string
      */
-    protected static $defaultDescription = 'Move all Files from Source to Destination S3 Bucket';
+    protected static $defaultDescription = 'Move all Files from Local (files in /backup folder) to S3 Bucket';
+
+    protected function configure(): void
+    {
+        $this
+            // ...
+            ->addArgument('bucket', InputArgument::OPTIONAL, 'Choose bucket to perform action on.');
+    }
 
     /**
      * Execute the command
@@ -42,27 +48,46 @@ class SourceToDestination extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output); //https://symfony.com/doc/current/console/style.html
-        $io->title('Move all Files from Source to Destination S3 Bucket');
+        $io->title('Move all Files from Local Backup Folder to S3 Bucket');
+
+        $S3BucketName = $input->getArgument('bucket');
+
+        // var_dump($S3BucketName);
+        // die();
 
         try {
-            $sourceFilesystem = sourceS3Connect();
-            $destinationFilesystem = destinationS3Connect();
-            $listing = $sourceFilesystem->listContents('/', true);
+            if ($S3BucketName == "destination") {
+                $S3Bucket = destinationS3Connect();
+            } else {
+                $S3Bucket = sourceS3Connect();
+            }
+            $localfilesystem = localFileConnect('backup');
+
+            $listing = $localfilesystem->listContents('/', true);
             foreach ($listing as $item) {
                 if ($item instanceof FileAttributes) {
                     // Code for Files
                     $path = $item->path();
-                    
+
                     try {
-                        #Get Files from S3
-                        $response = $sourceFilesystem->read($path);
+                        #Get Files from Local
+                        $response = $localfilesystem->read($path);
                     } catch (FilesystemException | UnableToReadFile $exception) {
                         $io->error($exception->getMessage());
                     }
 
                     try {
-                        $destinationFilesystem->write($path, $response);
-                        $io->info($path . '=> Moved Successfully');
+
+                        // $mimeType = $S3Bucket->mimeType($path);
+                        $FileExtension = pathinfo($path, PATHINFO_EXTENSION);
+                        // echo $FileExtension . "\n";
+                        // var_dump($FileExtension);
+                        $NotAllowed = array('php', 'phtml', 'html'); //skip this file extension
+                        if (!in_array($FileExtension, $NotAllowed)) {
+                            $S3Bucket->write($path, $response);
+                            $S3Bucket->setVisibility($path, 'public');
+                            $io->info($path . ' => Moved Successfully and Set Visibility to Public');
+                        }
                     } catch (FilesystemException | UnableToWriteFile $exception) {
                         $io->error($exception->getMessage());
                     }
@@ -78,7 +103,7 @@ class SourceToDestination extends Command
             $io->error($exception->getMessage());
         }
 
-        $io->success('Successfully Backup All Files From Source S3 Bucket to Backup Folder in Root Directory');
+        $io->success('Successfully Moved All Files From Backup Folder in Root Directory to S3 Bucket');
         return Command::SUCCESS;
     }
 }
