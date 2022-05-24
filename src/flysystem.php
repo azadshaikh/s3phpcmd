@@ -9,6 +9,9 @@ use League\Flysystem\AwsS3V3\AwsS3V3Adapter;
 use \League\Flysystem\FileAttributes;
 use \League\Flysystem\DirectoryAttributes;
 
+use League\Flysystem\Ftp\FtpAdapter;
+use League\Flysystem\Ftp\FtpConnectionOptions;
+
 
 function localFileConnect($path) {
 
@@ -84,3 +87,26 @@ function destinationS3Connect () {
     // The FilesystemOperator
     return $filesystem = new Filesystem($adapter);
     }
+
+    function ftpConnect () {
+        // The internal adapter
+        $adapter = new FtpAdapter(
+            // Connection options
+            FtpConnectionOptions::fromArray([
+                'host' => 'storage.bunnycdn.com', // required
+                'root' => '/bspot', // required
+                'username' => 'bspot', // required
+                'password' => 'db458084-16d4-4993-adecc0b7d728-2d6f-4b65', // required
+                'port' => 21,
+                'ssl' => false,
+                'timeout' => 90,
+                'passive' => true,
+                'transferMode' => FTP_BINARY,
+            ]),
+        );
+
+        // The FilesystemOperator
+        $filesystem = new League\Flysystem\Filesystem($adapter);
+        return $filesystem;
+
+        }

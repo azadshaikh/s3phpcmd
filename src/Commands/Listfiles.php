@@ -54,7 +54,11 @@ class Listfiles extends Command
         try {
             if ($S3Source == "destination") {
                 $filesystem = destinationS3Connect();
-            } else {
+            } else if ($S3Source == "ftp")
+            {
+                $filesystem = ftpConnect();
+            }
+            else {
                 $filesystem = sourceS3Connect();
             }
             $listing = $filesystem->listContents('/', true);
